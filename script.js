@@ -711,9 +711,9 @@ class MissionSimulator {
         document.getElementById('efficiency').textContent = `${(propulsionSystem.efficiency * 100).toFixed(1)}%`;
         
         // Calculate cost estimate (simplified)
-        const costPerKg = 10000; // $10,000 per kg to LEO
+        const costPerKg = 10000; // ₹10,000 per kg to LEO
         const costEstimate = massRequirements.totalMass * costPerKg;
-        document.getElementById('cost-estimate').textContent = `$${(costEstimate / 1e9).toFixed(2)} billion`;
+        document.getElementById('cost-estimate').textContent = `₹${(costEstimate / 1e9).toFixed(2)} billion`;
         
         // Update arrival conditions
         document.getElementById('approach-velocity').textContent = `${arrivalConditions.approachVelocity} km/s`;
@@ -768,7 +768,7 @@ class MissionSimulator {
         this.tradeoffChart = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Mission Duration (days)', 'Cost (Billion $)', 'Efficiency (%)'],
+                labels: ['Mission Duration (days)', 'Cost (Billion ₹)', 'Efficiency (%)'],
                 datasets: labels.map((label, index) => ({
                     label: label,
                     data: [

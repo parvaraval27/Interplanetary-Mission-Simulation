@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Gallery - Indian Space Innovation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body.gallery-page {
+            font-family: 'Orbitron', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .gallery-header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .gallery-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--primary-color);
+        }
+
+        .gallery-header p {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .gallery-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .mission-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--bg-primary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            border-radius: 0;
+        }
+
+        .mission-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .mission-subtitle {
+            font-family: 'Space Mono', monospace;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mission-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .origami-feature {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+            border-left: 3px solid var(--secondary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0;
+        }
+
+        .origami-feature h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .origami-feature p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .mission-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.8rem;
+            border-radius: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-value {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .startup-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(255, 0, 255, 0.05));
+            border: 1px solid var(--border-color);
+        }
+
+        .startup-card:hover {
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .focus-area {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            font-size: 0.75rem;
+            margin: 0.2rem;
+            border-radius: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+        }
+
+        .back-link a {
+            display: inline-block;
+            padding: 1.2rem 2rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--border-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+
+        .back-link a:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-header h1 {
+                font-size: 2rem;
+            }
+            
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="gallery-page">
+    <header class="gallery-header">
+        <h1>Indian Space Innovation Gallery</h1>
+        <p>Exploring India's contributions to origami-inspired space technology and pioneering startups in deployable space systems</p>
+    </header>
+
+    <div class="gallery-container">
+        <!-- ISRO Missions Section -->
+        <section class="gallery-section">
+            <h2 class="section-title">ISRO Missions with Deployable Technology</h2>
+            
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <span class="mission-badge">ISRO Mission</span>
+                    <h3 class="mission-title">Chandrayaan-2</h3>
+                    <p class="mission-subtitle">Lunar Orbiter & Lander Mission</p>
+                    <p class="mission-description">
+                        India's second lunar mission featuring sophisticated deployable systems including solar arrays, antennas, and the Vikram lander with compact folding mechanisms for efficient launch configuration.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Origami Applications</h4>
+                        <p>Deployable solar panels using compact folding techniques, high-gain antenna deployment systems, and precision landing gear with space-efficient stowage mechanisms.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Launch Mass</div>
+                            <div class="stat-value">3,850 kg</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Deployable Systems</div>
+                            <div class="stat-value">8 Major</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card">
+                    <span class="mission-badge">ISRO Mission</span>
+                    <h3 class="mission-title">Mars Orbiter Mission</h3>
+                    <p class="mission-subtitle">Mangalyaan - India's Mars Mission</p>
+                    <p class="mission-description">
+                        India's first interplanetary mission demonstrating cost-effective space exploration with innovative deployable solar arrays and antenna systems designed for deep space communication.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Origami Applications</h4>
+                        <p>Triangular solar panel deployment system, compact high-gain antenna with folding reflector, and instrument deployment mechanisms optimized for mass efficiency.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Launch Mass</div>
+                            <div class="stat-value">1,350 kg</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Mission Cost</div>
+                            <div class="stat-value">₹550 Crore</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card">
+                    <span class="mission-badge">ISRO Mission</span>
+                    <h3 class="mission-title">Astrosat</h3>
+                    <p class="mission-subtitle">India's First Space Observatory</p>
+                    <p class="mission-description">
+                        Multi-wavelength space telescope featuring deployable solar panels and precision instrument deployment systems for astronomical observations across X-ray, UV, and visible spectra.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Origami Applications</h4>
+                        <p>Deployable solar array wings, instrument cover deployment mechanisms, and precision alignment systems using origami-inspired folding for compact launch configuration.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Launch Mass</div>
+                            <div class="stat-value">1,516 kg</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Instruments</div>
+                            <div class="stat-value">5 Payloads</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card">
+                    <span class="mission-badge">ISRO Mission</span>
+                    <h3 class="mission-title">RISAT Series</h3>
+                    <p class="mission-subtitle">Radar Imaging Satellites</p>
+                    <p class="mission-description">
+                        Synthetic Aperture Radar satellites featuring large deployable antenna arrays using compact folding techniques for high-resolution Earth observation in all weather conditions.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Origami Applications</h4>
+                        <p>Large deployable radar antenna panels, compact stowage mechanisms, and precision unfolding systems for satellite communication and Earth observation.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Antenna Size</div>
+                            <div class="stat-value">3.6m x 2.0m</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Resolution</div>
+                            <div class="stat-value">1-3 meters</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indian Startups Section -->
+        <section class="gallery-section">
+            <h2 class="section-title">Indian Space Tech Startups</h2>
+            
+            <div class="mission-grid">
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Pixxel</h3>
+                    <p class="mission-subtitle">Hyperspectral Earth Imaging</p>
+                    <p class="mission-description">
+                        Building a constellation of hyperspectral Earth imaging satellites with innovative deployable systems and compact satellite designs for global monitoring.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Compact satellite bus designs, deployable solar arrays optimized for small satellites, and hyperspectral sensor deployment mechanisms.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2019</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">Small Sat</span>
+                                <span class="focus-area">Deployables</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Agnikul Cosmos</h3>
+                    <p class="mission-subtitle">3D Printed Rocket Technology</p>
+                    <p class="mission-description">
+                        Developing 3D printed rocket engines and launch vehicles with innovative deployment systems for small satellite launches, reducing mission costs and complexity.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Additive manufacturing for rocket components, compact launch vehicle designs, and deployable payload fairing systems for small satellites.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2017</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">3D Printing</span>
+                                <span class="focus-area">Launch Tech</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Skyroot Aerospace</h3>
+                    <p class="mission-subtitle">Private Launch Vehicles</p>
+                    <p class="mission-description">
+                        Developing Vikram series of launch vehicles with modular and deployable systems, focusing on cost-effective small satellite launches with rapid turnaround capability.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Modular rocket stages, deployable payload systems, and innovative fairing designs for efficient small satellite deployment and mission flexibility.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2018</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">Launch Vehicles</span>
+                                <span class="focus-area">Modular Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Bellatrix Aerospace</h3>
+                    <p class="mission-subtitle">Propulsion & Deployable Systems</p>
+                    <p class="mission-description">
+                        Developing electric propulsion systems and deployable structures for satellites, including innovative solar sail technology and compact propulsion solutions.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Electric thrusters, deployable solar sail technology, compact propulsion systems, and innovative satellite deployment mechanisms for various mission profiles.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2015</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">Propulsion</span>
+                                <span class="focus-area">Solar Sails</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Dhruva Space</h3>
+                    <p class="mission-subtitle">Satellite Systems</p>
+                    <p class="mission-description">
+                        Designing and manufacturing satellite platforms with deployable systems, focusing on modular satellite buses and innovative deployment mechanisms for various applications.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Modular satellite platforms, deployable antenna systems, compact solar array designs, and standardized deployment mechanisms for satellite constellations.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2012</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">Sat Platforms</span>
+                                <span class="focus-area">Deployables</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-card startup-card">
+                    <span class="mission-badge">Startup</span>
+                    <h3 class="mission-title">Space-Z</h3>
+                    <p class="mission-subtitle">Satellite Component Manufacturing</p>
+                    <p class="mission-description">
+                        Manufacturing satellite components including deployable mechanisms, antenna systems, and structural components with focus on cost-effective and reliable space hardware.
+                    </p>
+                    <div class="origami-feature">
+                        <h4>Innovation Focus</h4>
+                        <p>Deployable antenna systems, satellite structural components, reliable deployment mechanisms, and cost-effective manufacturing processes for space applications.</p>
+                    </div>
+                    <div class="mission-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Founded</div>
+                            <div class="stat-value">2018</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Focus Areas</div>
+                            <div class="stat-value">
+                                <span class="focus-area">Components</span>
+                                <span class="focus-area">Manufacturing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Connection -->
+        <section class="gallery-section">
+            <h2 class="section-title">Connection to Origami Mathematics</h2>
+            
+            <div class="mission-card">
+                <h3 class="mission-title">Origami Principles in Indian Space Technology</h3>
+                <p class="mission-description">
+                    Indian space missions and startups leverage fundamental origami principles to solve complex engineering challenges. The mathematical concepts of folding, unfolding, and compact storage are applied across various scales - from massive satellite antennas to microsatellite deployment systems.
+                </p>
+                
+                <div class="origami-feature">
+                    <h4>Key Mathematical Concepts Applied</h4>
+                    <p>• <strong>Rigid Origami:</strong> Deployable structures that maintain structural integrity during unfolding<br>
+                    • <strong>Miura-Ori Pattern:</strong> Used for compact solar panel stowage and deployment<br>
+                    • <strong>Kresling Pattern:</strong> Applied to deployable booms and antenna structures<br>
+                    • <strong>Waterbomb Base:</strong> Utilized in satellite deployment mechanisms and expandable habitats</p>
+                </div>
+                
+                <div class="origami-feature">
+                    <h4>Benefits for Space Applications</h4>
+                    <p>• <strong>Volume Efficiency:</strong> Maximizes payload capacity in limited launch fairing space<br>
+                    • <strong>Deployment Reliability:</strong> Single-degree-of-freedom mechanisms reduce failure points<br>
+                    • <strong>Mass Optimization:</strong> Lightweight structures reduce launch costs<br>
+                    • <strong>Scalability:</strong> Principles apply from microsatellites to large space telescopes</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="back-link">
+        <a href="index.html">← Back to Mission Simulator</a>
+    </div>
+</body>
+</html>
