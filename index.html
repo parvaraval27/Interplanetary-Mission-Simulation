@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interplanetary Mission Design Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Interplanetary Mission Design Simulator</h1>
+        <p>Plan your space mission and explore the solar system!</p>
+    </header>
+
+    <main class="main-container">
+        <div class="control-panel">
+            <section class="mission-setup">
+                <h2>Mission Configuration</h2>
+                
+                <div class="input-group">
+                    <label for="origin">Origin Planet:</label>
+                    <div class="custom-select" id="origin-select">
+                        <div class="select-selected" data-value="earth">Earth</div>
+                        <div class="select-options">
+                            <div class="select-option" data-value="mercury">Mercury</div>
+                            <div class="select-option" data-value="earth">Earth</div>
+                            <div class="select-option" data-value="mars">Mars</div>
+                            <div class="select-option" data-value="venus">Venus</div>
+                            <div class="select-option" data-value="jupiter">Jupiter</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="destination">Destination Planet:</label>
+                    <div class="custom-select" id="destination-select">
+                        <div class="select-selected" data-value="mars">Mars</div>
+                        <div class="select-options">
+                            <div class="select-option" data-value="mars">Mars</div>
+                            <div class="select-option" data-value="earth">Earth</div>
+                            <div class="select-option" data-value="venus">Venus</div>
+                            <div class="select-option" data-value="mercury">Mercury</div>
+                            <div class="select-option" data-value="jupiter">Jupiter</div>
+                            <div class="select-option" data-value="saturn">Saturn</div>
+                            <div class="select-option" data-value="uranus">Uranus</div>
+                            <div class="select-option" data-value="neptune">Neptune</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="payload-mass">Payload Mass (kg):</label>
+                    <input type="range" id="payload-mass" min="100" max="20000" value="5000" step="100">
+                    <span id="payload-mass-value">5000 kg</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="mission-duration">Max Mission Duration (days):</label>
+                    <input type="range" id="mission-duration" min="100" max="10000" value="500" step="10">
+                    <span id="mission-duration-value">500 days</span>
+                </div>
+            </section>
+
+            <section class="propulsion-setup">
+                <h2>Propulsion System</h2>
+                
+                <div class="propulsion-options">
+                    <div class="propulsion-card selected" data-type="chemical">
+                        <h3>Chemical Rocket</h3>
+                        <p>High thrust, lower efficiency</p>
+                        <div class="specs">
+                            <span>Isp: 350s</span>
+                            <span>Thrust: High</span>
+                        </div>
+                    </div>
+                    <div class="propulsion-card" data-type="electric">
+                        <h3>Electric Propulsion</h3>
+                        <p>Low thrust, high efficiency</p>
+                        <div class="specs">
+                            <span>Isp: 3000s</span>
+                            <span>Thrust: Low</span>
+                        </div>
+                    </div>
+                    <div class="propulsion-card" data-type="nuclear">
+                        <h3>Nuclear Thermal</h3>
+                        <p>Balance of thrust and efficiency</p>
+                        <div class="specs">
+                            <span>Isp: 900s</span>
+                            <span>Thrust: Medium</span>
+                        </div>
+                    </div>
+                    <div class="propulsion-card" data-type="solar-sail">
+                        <h3>Solar Sail</h3>
+                        <p>No propellant, continuous thrust</p>
+                        <div class="specs">
+                            <span>Isp: ∞</span>
+                            <span>Thrust: Very Low</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trajectory-options">
+                    <h3>Trajectory Type</h3>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="trajectory" value="hohmann" checked>
+                            Hohmann Transfer (Fuel Efficient)
+                        </label>
+                        <label>
+                            <input type="radio" name="trajectory" value="bi-elliptic">
+                            Bi-elliptic Transfer
+                        </label>
+                        <label>
+                            <input type="radio" name="trajectory" value="brachistochrone">
+                            Brachistochrone (Fastest)
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="launch-controls">
+                <button id="calculate-mission" class="primary-btn">Calculate Mission</button>
+                <button id="animate-trajectory" class="secondary-btn" disabled>Launch Animation</button>
+                <button id="reset-mission" class="secondary-btn">Reset</button>
+            </section>
+        </div>
+
+        <div class="visualization-panel">
+            <div class="solar-system-container">
+                <canvas id="solar-system-canvas"></canvas>
+                <div class="orbit-info">
+                    <div class="info-card">
+                        <h3>Mission Status</h3>
+                        <div id="mission-status">
+                            <p>Ready to calculate mission</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <div class="result-cards">
+                    <div class="result-card">
+                        <h3>Mission Parameters</h3>
+                        <div id="mission-params">
+                            <p>Travel Time: <span id="travel-time">--</span></p>
+                            <p>Total Delta-V: <span id="total-delta-v">--</span></p>
+                            <p>Propellant Mass: <span id="propellant-mass">--</span></p>
+                            <p>Total Mass: <span id="total-mass">--</span></p>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Performance Metrics</h3>
+                        <div id="performance-metrics">
+                            <p>Thrust-to-Weight: <span id="thrust-weight">--</span></p>
+                            <p>Specific Impulse: <span id="specific-impulse">--</span></p>
+                            <p>Efficiency: <span id="efficiency">--</span></p>
+                            <p>Cost Estimate: <span id="cost-estimate">--</span></p>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Arrival Conditions</h3>
+                        <div id="arrival-conditions">
+                            <p>Approach Velocity: <span id="approach-velocity">--</span></p>
+                            <p>Insertion Delta-V: <span id="insertion-delta-v">--</span></p>
+                            <p>Orbital Altitude: <span id="orbital-altitude">--</span></p>
+                            <p>Mission Success: <span id="mission-success">--</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trade-off-analysis">
+                    <h3>Trade-off Analysis</h3>
+                    <canvas id="tradeoff-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="educational-panel">
+        <div class="rocket-equation">
+            <h3>Tsiolkovsky Rocket Equation</h3>
+            <div class="equation">
+                Δv = I<sub>sp</sub> × g₀ × ln(m₀ / m<sub>f</sub>)
+            </div>
+            <p>
+                <strong>Δv:</strong> Change in velocity (m/s)<br>
+                <strong>I<sub>sp</sub>:</strong> Specific impulse (seconds)<br>
+                <strong>g₀:</strong> Standard gravity (9.81 m/s²)<br>
+                <strong>m₀:</strong> Initial mass (kg)<br>
+                <strong>m<sub>f</sub>:</strong> Final mass (kg)
+            </p>
+        </div>
+
+        <div class="mission-tips">
+            <h3>Mission Design Tips</h3>
+            <ul>
+                <li><strong>Higher I<sub>sp</sub></strong> means more fuel-efficient propulsion</li>
+                <li><strong>Hohmann transfers</strong> are most fuel-efficient for circular orbits</li>
+                <li><strong>Electric propulsion</strong> offers great efficiency but requires long mission times</li>
+                <li><strong>Chemical rockets</strong> provide high thrust for quick missions</li>
+                <li><strong>Solar sails</strong> work best for inner solar system missions</li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
