@@ -1,3 +1,132 @@
+// Translation system
+const TRANSLATIONS = {
+    en: {
+        title: "Interplanetary Mission Design Simulator",
+        subtitle: "Plan your space mission and explore the solar system!",
+        mission_config: "Mission Configuration",
+        origin_planet: "Origin Planet:",
+        destination_planet: "Destination Planet:",
+        payload_mass: "Payload Mass (kg):",
+        mission_duration: "Max Mission Duration (days):",
+        propulsion_system: "Propulsion System",
+        trajectory_type: "Trajectory Type",
+        chemical_rocket: "Chemical Rocket",
+        electric_propulsion: "Electric Propulsion",
+        nuclear_thermal: "Nuclear Thermal",
+        solar_sail: "Solar Sail",
+        hohmann_transfer: "Hohmann Transfer (Fuel Efficient)",
+        bi_elliptic: "Bi-elliptic Transfer",
+        brachistochrone: "Brachistochrone (Fastest)",
+        calculate_mission: "Calculate Mission",
+        launch_animation: "Launch Animation",
+        reset: "Reset",
+        mission_status: "Mission Status",
+        ready_calculate: "Ready to calculate mission",
+        mission_params: "Mission Parameters",
+        travel_time: "Travel Time:",
+        total_delta_v: "Total Delta-V:",
+        propellant_mass: "Propellant Mass:",
+        total_mass: "Total Mass:",
+        performance_metrics: "Performance Metrics",
+        thrust_weight: "Thrust-to-Weight:",
+        specific_impulse: "Specific Impulse:",
+        efficiency: "Efficiency:",
+        cost_estimate: "Cost Estimate:",
+        arrival_conditions: "Arrival Conditions",
+        approach_velocity: "Approach Velocity:",
+        insertion_delta_v: "Insertion Delta-V:",
+        orbital_altitude: "Orbital Altitude:",
+        mission_success: "Mission Success:",
+        tradeoff_analysis: "Trade-off Analysis",
+        rocket_equation: "Tsiolkovsky Rocket Equation",
+        mission_tips: "Mission Design Tips"
+    },
+    hi: {
+        title: "अंतरिक्षयान मिशन डिजाइन सिम्युलेटर",
+        subtitle: "अपना अंतरिक्ष मिशन योजना बनाएं और सौरमंडल का अन्वेषण करें!",
+        mission_config: "मिशन कॉन्फिगरेशन",
+        origin_planet: "मूल ग्रह:",
+        destination_planet: "गंतव्य ग्रह:",
+        payload_mass: "पेलोड द्रव्यमान (किग्रा):",
+        mission_duration: "अधिकतम मिशन अवधि (दिन):",
+        propulsion_system: "प्रोपल्शन सिस्टम",
+        trajectory_type: "ट्रैजेक्टरी प्रकार",
+        chemical_rocket: "रासायनिक रॉकेट",
+        electric_propulsion: "विद्युत प्रणोदन",
+        nuclear_thermal: "परमाणु थर्मल",
+        solar_sail: "सौर पाल",
+        hohmann_transfer: "होहमान ट्रांसफर (ईंधन दक्ष)",
+        bi_elliptic: "बाय-एलिप्टिक ट्रांसफर",
+        brachistochrone: "ब्रैकिस्टोक्रोन (सबसे तेज़)",
+        calculate_mission: "मिशन की गणना करें",
+        launch_animation: "एनिमेशन लॉन्च करें",
+        reset: "रीसेट",
+        mission_status: "मिशन स्थिति",
+        ready_calculate: "मिशन की गणना के लिए तैयार",
+        mission_params: "मिशन पैरामीटर",
+        travel_time: "यात्रा समय:",
+        total_delta_v: "कुल डेल्टा-V:",
+        propellant_mass: "प्रोपेलेंट द्रव्यमान:",
+        total_mass: "कुल द्रव्यमान:",
+        performance_metrics: "प्रदर्शन मेट्रिक्स",
+        thrust_weight: "थ्रस्ट-टू-वेट:",
+        specific_impulse: "विशिष्ट आवेग:",
+        efficiency: "दक्षता:",
+        cost_estimate: "लागत अनुमान:",
+        arrival_conditions: "आगमन की स्थितियां",
+        approach_velocity: "दृष्टिकोण वेग:",
+        insertion_delta_v: "प्रवेश डेल्टा-V:",
+        orbital_altitude: "कक्षीय ऊंचाई:",
+        mission_success: "मिशन सफलता:",
+        tradeoff_analysis: "ट्रेड-ऑफ विश्लेषण",
+        rocket_equation: "त्सिओलकोवस्की रॉकेट समीकरण",
+        mission_tips: "मिशन डिजाइन टिप्स"
+    },
+    gu: {
+        title: "અંતરગ્રહ મિશન ડિઝાઇન સિમ્યુલેટર",
+        subtitle: "તમારું અવકાશ મિશન આયોજન કરો અને સૌરમંડળનું અન્વેષણ કરો!",
+        mission_config: "મિશન કોન્ફિગરેશન",
+        origin_planet: "મૂળ ગ્રહ:",
+        destination_planet: "ગંતવ્ય ગ્રહ:",
+        payload_mass: "પેલોડ દળ (કિગ્રા):",
+        mission_duration: "મહત્તમ મિશન સમયગાળો (દિવસો):",
+        propulsion_system: "પ્રોપલ્શન સિસ્ટમ",
+        trajectory_type: "ટ્રેજેક્ટરી પ્રકાર",
+        chemical_rocket: "રાસાયણિક રોકેટ",
+        electric_propulsion: "વિદ્યુત પ્રણોદન",
+        nuclear_thermal: "પરમાણુ થર્મલ",
+        solar_sail: "સોલર સેલ",
+        hohmann_transfer: "હોહમાન ટ્રાન્સફર (ઇંધણ કાર્યક્ષમ)",
+        bi_elliptic: "બાય-એલિપ્ટિક ટ્રાન્સફર",
+        brachistochrone: "બ્રેકિસ્ટોક્રોન (સૌથી ઝડપી)",
+        calculate_mission: "મિશનની ગણતરી કરો",
+        launch_animation: "એનિમેશન લોન્ચ કરો",
+        reset: "રીસેટ",
+        mission_status: "મિશન સ્થિતિ",
+        ready_calculate: "મિશનની ગણતરી માટે તૈયાર",
+        mission_params: "મિશન પેરામીટર્સ",
+        travel_time: "પ્રવાસ સમય:",
+        total_delta_v: "કુલ ડેલ્ટા-V:",
+        propellant_mass: "પ્રોપેલન્ટ દળ:",
+        total_mass: "કુલ દળ:",
+        performance_metrics: "પ્રદર્શન મેટ્રિક્સ",
+        thrust_weight: "થ્રસ્ટ-ટુ-વેટ:",
+        specific_impulse: "સ્પેસિફિક ઇમ્પલ્સ:",
+        efficiency: "કાર્યક્ષમતા:",
+        cost_estimate: "ખર્ચ અંદાજ:",
+        arrival_conditions: "આગમનની સ્થિતિઓ",
+        approach_velocity: "અભિગમ વેગ:",
+        insertion_delta_v: "પ્રવેશ ડેલ્ટા-V:",
+        orbital_altitude: "કક્ષાયી ઊંચાઈ:",
+        mission_success: "મિશન સફળતા:",
+        tradeoff_analysis: "ટ્રેડ-ઓફ વિશ્લેષણ",
+        rocket_equation: "ત્સિઓલકોવસ્કી રોકેટ સમીકરણ",
+        mission_tips: "મિશન ડિઝાઇન ટિપ્સ"
+    }
+};
+
+let currentLanguage = 'en';
+
 // Planetary data and constants
 const PLANETS = {
     mercury: { name: 'Mercury', radius: 0.39, color: '#8C7853', mass: 0.055, period: 88 },
@@ -72,6 +201,9 @@ class MissionSimulator {
     }
 
     initializeEventListeners() {
+        // Language selector
+        this.initializeLanguageSelector();
+        
         // Range input listeners
         document.getElementById('payload-mass').addEventListener('input', (e) => {
             document.getElementById('payload-mass-value').textContent = `${e.target.value} kg`;
@@ -115,6 +247,9 @@ class MissionSimulator {
         document.querySelectorAll('.custom-select').forEach(select => {
             const selected = select.querySelector('.select-selected');
             const options = select.querySelector('.select-options');
+
+            // Skip language selector as it's handled separately
+            if (select.id === 'lang-select') return;
 
             // Toggle dropdown
             selected.addEventListener('click', () => {
@@ -894,6 +1029,88 @@ class MissionSimulator {
         if (this.tradeoffChart) {
             this.tradeoffChart.destroy();
             this.tradeoffChart = null;
+        }
+    }
+
+    initializeLanguageSelector() {
+        const langSelect = document.getElementById('lang-select');
+        const selected = langSelect.querySelector('.select-selected');
+        const options = langSelect.querySelector('.select-options');
+
+        // Toggle dropdown
+        selected.addEventListener('click', () => {
+            // Close other dropdowns
+            document.querySelectorAll('.custom-select').forEach(s => {
+                if (s !== langSelect) s.classList.remove('open');
+            });
+            langSelect.classList.toggle('open');
+        });
+
+        // Select option
+        options.querySelectorAll('.select-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.dataset.value;
+                const text = option.textContent;
+
+                selected.textContent = text;
+                selected.dataset.value = value;
+
+                // Update selected class
+                options.querySelectorAll('.select-option').forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+
+                langSelect.classList.remove('open');
+                
+                // Update language
+                currentLanguage = value;
+                this.updateLanguage();
+            });
+        });
+
+        // Set initial selected state for English
+        const englishOption = options.querySelector('[data-value="en"]');
+        if (englishOption) {
+            englishOption.classList.add('selected');
+        }
+    }
+
+    updateLanguage() {
+        const translations = TRANSLATIONS[currentLanguage];
+        
+        // Update all elements with data-lang attributes
+        document.querySelectorAll('[data-lang]').forEach(element => {
+            const key = element.dataset.lang;
+            if (translations[key]) {
+                element.textContent = translations[key];
+            }
+        });
+
+        // Update planet names in dropdowns
+        this.updatePlanetNames();
+        
+        // Redraw to update canvas text if needed
+        this.drawSolarSystem();
+    }
+
+    updatePlanetNames() {
+        // Update planet dropdown options
+        const originSelect = document.querySelector('#origin-select .select-options');
+        const destSelect = document.querySelector('#destination-select .select-options');
+        
+        if (originSelect && destSelect) {
+            originSelect.querySelectorAll('.select-option').forEach(option => {
+                const planetKey = option.dataset.value;
+                if (PLANETS[planetKey]) {
+                    option.textContent = PLANETS[planetKey].name;
+                }
+            });
+            
+            destSelect.querySelectorAll('.select-option').forEach(option => {
+                const planetKey = option.dataset.value;
+                if (PLANETS[planetKey]) {
+                    option.textContent = PLANETS[planetKey].name;
+                }
+            });
         }
     }
 }
