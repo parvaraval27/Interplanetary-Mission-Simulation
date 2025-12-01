@@ -239,13 +239,13 @@ class MissionSimulator {
             const planetY = projectedY;
             this.planetScreenPositions[key] = { x: planetX, y: planetY };
 
-            // Draw a faint elliptical orbit for depth perception
+            // Draw a slightly brighter elliptical orbit for depth perception
             const rx = offset;
             const ry = offset * 0.35; // flattened for perspective look
             ctx.beginPath();
             ctx.setLineDash([4, 10]);
             ctx.ellipse(sunX, centerY, rx, ry, 0, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.setLineDash([]);
@@ -395,7 +395,11 @@ class MissionSimulator {
 
         // Update UI with results
         this.updateResults();
-        this.updateMissionStatus('Mission calculation complete!', 'success');
+        if (this.missionData.success) {
+            this.updateMissionStatus('Mission calculation complete! Mission is feasible with current parameters.', 'success');
+        } else {
+            this.updateMissionStatus('Mission calculation complete. Current configuration fails constraints (time or mass). Try adjusting payload, duration, propulsion, or trajectory.', 'info');
+        }
         
         // Enable animation button
         document.getElementById('animate-trajectory').disabled = false;

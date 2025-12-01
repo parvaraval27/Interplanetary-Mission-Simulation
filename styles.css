@@ -837,6 +837,29 @@ header p {
     letter-spacing: 1px;
 }
 
+/* Help page layout overrides */
+body.help-page .main-container {
+    grid-template-columns: 1fr;
+    max-width: 1100px;
+}
+
+body.help-page .control-panel {
+    max-height: none;
+    overflow-y: visible;
+}
+
+body.help-page .educational-panel {
+    margin-top: 2rem;
+}
+
+body.help-page details summary {
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
 @media (max-width: 1200px) {
     .main-container {
         grid-template-columns: 1fr;

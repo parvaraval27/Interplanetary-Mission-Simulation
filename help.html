@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interplanetary Mission Simulation – Help & Concepts</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body.help-page {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p, li {
+            font-size: 0.98rem;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        details {
+            margin-bottom: 1.4rem;
+        }
+
+        details summary {
+            list-style: none;
+        }
+
+        body.help-page a {
+            color: #66b3ff;
+        }
+    </style>
+</head>
+<body class="help-page">
+    <header>
+        <h1>Interplanetary Mission Simulation – Help</h1>
+        <p>Reference guide for the mission planner parameters and outputs.</p>
+    </header>
+
+    <main class="main-container">
+        <div class="control-panel">
+            <section class="mission-setup">
+                <details open>
+                    <summary>Inputs &amp; Controls</summary>
+                <h3>Origin Planet / Destination Planet</h3>
+                <p>
+                    These define the starting and target bodies of your mission. The simulator uses simplified
+                    circular orbits around the Sun with average orbital radii (in astronomical units, AU).
+                </p>
+                <ul>
+                    <li><strong>Inner planets:</strong> Mercury, Venus, Earth, Mars</li>
+                    <li><strong>Outer planets:</strong> Jupiter, Saturn, Uranus, Neptune</li>
+                </ul>
+
+                <h3>Payload Mass (kg)</h3>
+                <p>
+                    The useful mass you want to deliver (spacecraft, instruments, cargo). Higher payload mass
+                    increases propellant requirements and total launch mass through the rocket equation.
+                </p>
+
+                <h3>Max Mission Duration (days)</h3>
+                <p>
+                    The maximum allowed flight time. If the simulated travel time exceeds this limit, the mission
+                    is marked as <strong>Failed</strong>. Sliding the control fully right sets the duration to
+                    <strong>∞ days</strong>, meaning there is no time constraint.
+                </p>
+
+                <h3>Propulsion System</h3>
+                <p>
+                    Each card represents a propulsion model with different thrust and efficiency values:
+                </p>
+                <ul>
+                    <li><strong>Chemical Rocket:</strong> High thrust, lower specific impulse (Isp).</li>
+                    <li><strong>Electric Propulsion:</strong> Very efficient (high Isp) but low thrust, usually
+                        requires long mission durations.</li>
+                    <li><strong>Nuclear Thermal:</strong> Intermediate performance – higher Isp than chemical,
+                        better thrust than electric.</li>
+                    <li><strong>Solar Sail:</strong> Extremely high effective Isp (no propellant), but very low
+                        thrust and long trip times.</li>
+                </ul>
+
+                <h3>Trajectory Type</h3>
+                <p>
+                    Chooses a simplified transfer model between orbits:
+                </p>
+                <ul>
+                    <li><strong>Hohmann Transfer:</strong> Classic two-burn, fuel-efficient transfer between nearly
+                        circular orbits.</li>
+                    <li><strong>Bi-elliptic Transfer:</strong> Uses an intermediate orbit; can be even more
+                        efficient than Hohmann for large radius changes, but often slower.</li>
+                    <li><strong>Brachistochrone:</strong> Idealized continuously-thrusting trajectory minimizing
+                        travel time, used here as a “fast but expensive” option.</li>
+                </ul>
+            </section>
+
+            <section class="mission-setup">
+                <details open>
+                    <summary>Outputs &amp; Metrics</summary>
+                <h3>Travel Time</h3>
+                <p>
+                    Approximate mission duration in days, derived from the selected transfer orbit and propulsion
+                    assumptions.
+                </p>
+
+                <h3>Total Delta‑V (Δv)</h3>
+                <p>
+                    The total change in velocity required for departure and arrival maneuvers, expressed in km/s.
+                    This is based on simplified two-body orbital mechanics and the chosen trajectory type.
+                </p>
+
+                <h3>Propellant Mass / Total Mass</h3>
+                <p>
+                    Computed with the <strong>Tsiolkovsky rocket equation</strong>:
+                </p>
+                <p style="font-family: 'Space Mono', monospace;">
+                    Δv = I<sub>sp</sub> × g₀ × ln(m₀ / m<sub>f</sub>)
+                </p>
+                <ul>
+                    <li><strong>Propellant Mass:</strong> Mass of fuel required to achieve the Δv.</li>
+                    <li><strong>Total Mass:</strong> Payload + propellant + structural mass.
+                    </li>
+                </ul>
+
+                <h3>Thrust‑to‑Weight (N/kg)</h3>
+                <p>
+                    Effective thrust per unit mass. Higher values generally mean faster acceleration and potentially
+                    shorter transfer times, but this simulator keeps the underlying physics simplified.
+                </p>
+
+                <h3>Specific Impulse (Isp)</h3>
+                <p>
+                    A measure of propulsion efficiency in seconds. Higher Isp means more Δv per unit of propellant
+                    mass. Electric and solar-sail systems have much higher Isp than chemical rockets.
+                </p>
+
+                <h3>Efficiency (%)</h3>
+                <p>
+                    A simplified representation of how effectively each propulsion system converts propellant energy
+                    into useful Δv. This factors into the total Δv requirement and mass estimates.
+                </p>
+
+                <h3>Cost Estimate</h3>
+                <p>
+                    A rough launch cost, assuming a constant cost per kilogram to low Earth orbit. This is intended
+                    as an order‑of‑magnitude indicator rather than an accurate budget.
+                </p>
+
+                <h3>Arrival Conditions</h3>
+                <ul>
+                    <li><strong>Approach Velocity:</strong> Spacecraft speed relative to the target planet at arrival.</li>
+                    <li><strong>Insertion Delta‑V:</strong> Δv needed to slow down into orbit around the destination.</li>
+                    <li><strong>Orbital Altitude:</strong> Target orbit height above the planet’s surface (km),
+                        sampled within a plausible range.</li>
+                </ul>
+
+                <h3>Mission Success</h3>
+                <p>
+                    The mission is marked <strong>Success</strong> if both of the following are satisfied:
+                </p>
+                <ul>
+                    <li>Travel time ≤ max mission duration (unless the duration slider is set to ∞).</li>
+                    <li>Total mass is below a threshold limit (representing a practical launch mass cap).</li>
+                </ul>
+                <p>
+                    If either constraint is violated, the mission is marked <strong>Failed</strong> and the
+                    mission status panel prompts you to adjust configuration.
+                </p>
+                </details>
+            </section>
+
+            <section class="mission-setup">
+                <details open>
+                    <summary>Learn More – External References</summary>
+                <p>For deeper study of orbital mechanics and propulsion, see:</p>
+                <ul>
+                    <li><a href="https://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation" target="_blank" rel="noopener noreferrer">Tsiolkovsky rocket equation (Wikipedia)</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Hohmann_transfer_orbit" target="_blank" rel="noopener noreferrer">Hohmann transfer orbit (Wikipedia)</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Bi-elliptic_transfer" target="_blank" rel="noopener noreferrer">Bi‑elliptic transfer (Wikipedia)</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Electric_propulsion" target="_blank" rel="noopener noreferrer">Electric propulsion for spacecraft</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Solar_sail" target="_blank" rel="noopener noreferrer">Solar sail concepts</a></li>
+                    <li><a href="https://solarsystem.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Solar System Exploration</a></li>
+                </ul>
+                <p>
+                    This simulator is intentionally simplified. Real mission design also considers plane changes,
+                    launch windows, gravity assists, attitude control, power, communications, and many additional
+                    engineering constraints.
+                </p>
+                </details>
+            </section>
+
+            <section class="mission-setup">
+                <h2>Back to Simulator</h2>
+                <p>
+                    When you are ready to experiment, return to the main mission planner interface.
+                </p>
+                <a href="index.html" class="secondary-btn">Back to Mission Simulator</a>
+            </section>
+        </div>
+    </main>
+
+    <footer class="educational-panel">
+        <div class="mission-tips">
+            <h3>Tip</h3>
+            <ul>
+                <li>Try comparing chemical vs. electric propulsion for the same origin/destination and payload.</li>
+                <li>Observe how increasing max mission duration can make high‑Isp, low‑thrust systems more viable.</li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
