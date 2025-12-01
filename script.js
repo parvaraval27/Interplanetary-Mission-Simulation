@@ -126,6 +126,198 @@ const TRANSLATIONS = {
 };
 
 let currentLanguage = 'en';
+let tutorialMode = false;
+let currentTutorialStep = 0;
+
+// Tutorial system
+const TUTORIAL_STEPS = {
+    en: [
+        {
+            title: "Welcome to the Mission Simulator!",
+            content: "This tutorial will guide you through planning your first interplanetary mission. Let's start with the basics.",
+            target: ".header-text h1",
+            position: "bottom"
+        },
+        {
+            title: "Choose Your Origin",
+            content: "Select where your mission will start from. Earth is the default, but you can launch from any planet!",
+            target: "#origin-select",
+            position: "bottom"
+        },
+        {
+            title: "Select Your Destination",
+            content: "Choose which planet you want to travel to. Each destination has different requirements and challenges.",
+            target: "#destination-select", 
+            position: "bottom"
+        },
+        {
+            title: "Set Payload Mass",
+            content: "Adjust how much cargo your spacecraft will carry. More payload requires more fuel!",
+            target: "#payload-mass",
+            position: "right"
+        },
+        {
+            title: "Mission Duration",
+            content: "Set the maximum time your mission can take. Some trajectories are faster but use more fuel.",
+            target: "#mission-duration",
+            position: "right"
+        },
+        {
+            title: "Choose Propulsion System",
+            content: "Different engines have different strengths. Chemical rockets are powerful, electric is efficient, nuclear is balanced.",
+            target: ".propulsion-options",
+            position: "bottom"
+        },
+        {
+            title: "Select Trajectory Type",
+            content: "Choose your flight path. Hohmann is fuel-efficient, Brachistochrone is fastest.",
+            target: ".trajectory-options",
+            position: "bottom"
+        },
+        {
+            title: "Calculate Your Mission",
+            content: "Now click 'Calculate Mission' to see if your plan works! The system will analyze your trajectory.",
+            target: "#calculate-mission",
+            position: "top"
+        },
+        {
+            title: "Review Results",
+            content: "Check your mission parameters, performance metrics, and arrival conditions. Make sure everything looks good!",
+            target: ".results-panel",
+            position: "left"
+        },
+        {
+            title: "Launch Animation",
+            content: "Ready to go? Click 'Launch Animation' to watch your spacecraft journey through the solar system!",
+            target: "#animate-trajectory",
+            position: "top"
+        }
+    ],
+    hi: [
+        {
+            title: "मिशन सिम्युलेटर में आपका स्वागत है!",
+            content: "यह ट्यूटोरियल आपको अपने पहले अंतरिक्ष यान मिशन की योजना बनाने में मार्गदर्शन करेगा। आइए बेसिक्स से शुरू करते हैं।",
+            target: ".header-text h1",
+            position: "bottom"
+        },
+        {
+            title: "अपना मूल चुनें",
+            content: "चुनें कि आपका मिशन कहां से शुरू होगा। अर्थ डिफ़ॉल्ट है, लेकिन आप किसी भी ग्रह से लॉन्च कर सकते हैं!",
+            target: "#origin-select",
+            position: "bottom"
+        },
+        {
+            title: "अपना गंतव्य चुनें",
+            content: "चुनें कि आप किस ग्रह पर जाना चाहते हैं। प्रत्येक गंतव्य में अलग-अलग आवश्यकताएं और चुनौतियां हैं।",
+            target: "#destination-select", 
+            position: "bottom"
+        },
+        {
+            title: "पेलोड द्रव्यमान सेट करें",
+            content: "समायोजित करें कि आपका अंतरिक्ष यान कितना कार्गो ले जाएगा। अधिक पेलोड के लिए अधिक ईंधन की आवश्यकता होती है!",
+            target: "#payload-mass",
+            position: "right"
+        },
+        {
+            title: "मिशन अवधि",
+            content: "निर्धारित करें कि आपका मिशन अधिकतम कितने समय तक चल सकता है। कुछ ट्रैजेक्टरी तेज़ हैं लेकिन अधिक ईंधन का उपयोग करती हैं।",
+            target: "#mission-duration",
+            position: "right"
+        },
+        {
+            title: "प्रोपल्शन सिस्टम चुनें",
+            content: "विभिन्न इंजनों की अलग-अलग ताकत होती है। रासायनिक रॉकेट शक्तिशाली हैं, इलेक्ट्रिक कुशल है, परमाणु संतुलित है।",
+            target: ".propulsion-options",
+            position: "bottom"
+        },
+        {
+            title: "ट्रैजेक्टरी प्रकार चुनें",
+            content: "अपना उड़ान पथ चुनें। होहमान ईंधन-कुशल है, ब्रैकिस्टोक्रोन सबसे तेज़ है।",
+            target: ".trajectory-options",
+            position: "bottom"
+        },
+        {
+            title: "अपना मिशन की गणना करें",
+            content: "अब 'मिशन की गणना करें' पर क्लिक करें यह देखने के लिए कि क्या आपकी योजना काम करती है! सिस्टम आपकी ट्रैजेक्टरी का विश्लेषण करेगा।",
+            target: "#calculate-mission",
+            position: "top"
+        },
+        {
+            title: "परिणाम समीक्षा करें",
+            content: "अपने मिशन पैरामीटर, प्रदर्शन मेट्रिक्स और आगमन की स्थितियों की जांच करें। सुनिश्चित करें कि सब कुछ अच्छा लग रहा है!",
+            target: ".results-panel",
+            position: "left"
+        },
+        {
+            title: "एनिमेशन लॉन्च करें",
+            content: "जाने के लिए तैयार हैं? 'एनिमेशन लॉन्च करें' पर क्लिक करें और अपने अंतरिक्ष यान के सौरमंडल में यात्रा करते हुए देखें!",
+            target: "#animate-trajectory",
+            position: "top"
+        }
+    ],
+    gu: [
+        {
+            title: "મિશન સિમ્યુલેટરમાં આપનું સ્વાગત છે!",
+            content: "આ ટ્યુટોરિયલ તમને તમારા પ્રથમ અંતરિક્ષ યાન મિશનની યોજના બનાવવામાં માર્ગદર્શન આપશે. ચાલો મૂળભૂત બાબતોથી શરૂ કરીએ.",
+            target: ".header-text h1",
+            position: "bottom"
+        },
+        {
+            title: "તમારું મૂળ પસંદ કરો",
+            content: "પસંદ કરો કે તમારું મિશન ક્યાંથી શરૂ થશે. અર્થ ડિફોલ્ટ છે, પરંતુ તમે કોઈપણ ગ્રહ પરથી લોન્ચ કરી શકો છો!",
+            target: "#origin-select",
+            position: "bottom"
+        },
+        {
+            title: "તમારું લક્ષ્ય પસંદ કરો",
+            content: "પસંદ કરો કે તમે કઈ ગ્રહ પર જવા માંગો છો. દરેક લક્ષ્યમાં અલગ-અલગ જરૂરિયાતો અને પડકારો છે.",
+            target: "#destination-select", 
+            position: "bottom"
+        },
+        {
+            title: "પેલોડ દળ સેટ કરો",
+            content: "સમાયોજિત કરો કે તમારું અંતરિક્ષ યાન કેટલો કાર્ગો લઈ જશે. વધુ પેલોડ માટે વધુ ઇંધણની જરૂર છે!",
+            target: "#payload-mass",
+            position: "right"
+        },
+        {
+            title: "મિશન સમયગાળો",
+            content: "નક્કી કરો કે તમારું મિશન મહત્તમ કેટલા સમય સુધી ચાલી શકે છે. કેટલીક ટ્રેજેક્ટરી ઝડપી છે પરંતુ વધુ ઇંધણ વાપરે છે.",
+            target: "#mission-duration",
+            position: "right"
+        },
+        {
+            title: "પ્રોપલ્શન સિસ્ટમ પસંદ કરો",
+            content: "વિવિધ એન્જિનની અલગ-અલગ શક્તિઓ છે. રાસાયણિક રોકેટ શક્તિશાળી છે, ઇલેક્ટ્રિક કાર્યક્ષમ છે, પરમાણુ સંતુલિત છે.",
+            target: ".propulsion-options",
+            position: "bottom"
+        },
+        {
+            title: "ટ્રેજેક્ટરી પ્રકાર પસંદ કરો",
+            content: "તમારો ઉડાન માર્ગ પસંદ કરો. હોહમાન ઇંધણ-કાર્યક્ષમ છે, બ્રેકિસ્ટોક્રોન સૌથી ઝડપી છે.",
+            target: ".trajectory-options",
+            position: "bottom"
+        },
+        {
+            title: "તમારું મિશન ગણો",
+            content: "હવે 'મિશનની ગણતરી કરો' પર ક્લિક કરો જોવા માટે કે શું તમારી યોજના કામ કરે છે! સિસ્ટમ તમારી ટ્રેજેક્ટરીનું વિશ્લેષણ કરશે.",
+            target: "#calculate-mission",
+            position: "top"
+        },
+        {
+            title: "પરિણામો સમીક્ષા કરો",
+            content: "તમારા મિશન પેરામીટર્સ, પ્રદર્શન મેટ્રિક્સ અને આગમનની સ્થિતિઓ તપાસો. ખાતરી કરો કે બધું સારું લાગે છે!",
+            target: ".results-panel",
+            position: "left"
+        },
+        {
+            title: "એનિમેશન લોન્ચ કરો",
+            content: "જવા માટે તૈયાર? 'એનિમેશન લોન્ચ કરો' પર ક્લિક કરો અને તમારા અંતરિક્ષ યાનને સૌરમંડળમાં પ્રવાસ કરતા જુઓ!",
+            target: "#animate-trajectory",
+            position: "top"
+        }
+    ]
+};
 
 // Planetary data and constants
 const PLANETS = {
@@ -203,6 +395,9 @@ class MissionSimulator {
     initializeEventListeners() {
         // Language selector
         this.initializeLanguageSelector();
+        
+        // Tutorial toggle
+        document.getElementById('tutorial-toggle').addEventListener('click', () => this.toggleTutorial());
         
         // Range input listeners
         document.getElementById('payload-mass').addEventListener('input', (e) => {
@@ -1111,6 +1306,194 @@ class MissionSimulator {
                     option.textContent = PLANETS[planetKey].name;
                 }
             });
+        }
+    }
+
+    // Tutorial Methods
+    toggleTutorial() {
+        if (tutorialMode) {
+            this.endTutorial();
+        } else {
+            this.startTutorial();
+        }
+    }
+
+    startTutorial() {
+        tutorialMode = true;
+        currentTutorialStep = 0;
+        const overlay = document.getElementById('tutorial-overlay');
+        overlay.classList.add('active');
+        
+        // Initialize tutorial controls
+        this.initializeTutorialControls();
+        
+        // Add scroll listener
+        this.tutorialScrollListener = () => {
+            if (tutorialMode && currentTutorialStep >= 0) {
+                const steps = TUTORIAL_STEPS[currentLanguage];
+                if (steps && currentTutorialStep < steps.length) {
+                    this.positionTutorialTooltip(steps[currentTutorialStep]);
+                }
+            }
+        };
+        window.addEventListener('scroll', this.tutorialScrollListener);
+        window.addEventListener('resize', this.tutorialScrollListener);
+        
+        // Show first step
+        this.showTutorialStep(0);
+    }
+
+    endTutorial() {
+        tutorialMode = false;
+        currentTutorialStep = 0;
+        const overlay = document.getElementById('tutorial-overlay');
+        overlay.classList.remove('active');
+        
+        // Remove scroll listener
+        if (this.tutorialScrollListener) {
+            window.removeEventListener('scroll', this.tutorialScrollListener);
+            window.removeEventListener('resize', this.tutorialScrollListener);
+            this.tutorialScrollListener = null;
+        }
+        
+        // Remove highlight
+        const highlight = document.querySelector('.tutorial-highlight');
+        if (highlight) {
+            highlight.style.display = 'none';
+        }
+    }
+
+    initializeTutorialControls() {
+        document.getElementById('tutorial-next').addEventListener('click', () => this.nextTutorialStep());
+        document.getElementById('tutorial-prev').addEventListener('click', () => this.prevTutorialStep());
+        document.getElementById('tutorial-skip').addEventListener('click', () => this.endTutorial());
+    }
+
+    showTutorialStep(stepIndex) {
+        const steps = TUTORIAL_STEPS[currentLanguage];
+        if (!steps || stepIndex >= steps.length) {
+            this.endTutorial();
+            return;
+        }
+
+        const step = steps[stepIndex];
+        const overlay = document.getElementById('tutorial-overlay');
+        const tooltip = overlay.querySelector('.tutorial-tooltip');
+        const highlight = overlay.querySelector('.tutorial-highlight');
+        
+        // Update content
+        document.getElementById('tutorial-title').textContent = step.title;
+        document.getElementById('tutorial-content').textContent = step.content;
+        document.getElementById('tutorial-step').textContent = `Step ${stepIndex + 1} of ${steps.length}`;
+        
+        // Update dots
+        this.updateTutorialDots(stepIndex, steps.length);
+        
+        // Update buttons
+        document.getElementById('tutorial-prev').disabled = stepIndex === 0;
+        document.getElementById('tutorial-next').textContent = stepIndex === steps.length - 1 ? 'Finish' : 'Next →';
+        
+        // Position tooltip and highlight
+        this.positionTutorialTooltip(step);
+    }
+
+    positionTutorialTooltip(step) {
+        const overlay = document.getElementById('tutorial-overlay');
+        const tooltip = overlay.querySelector('.tutorial-tooltip');
+        const highlight = overlay.querySelector('.tutorial-highlight');
+        const targetElement = document.querySelector(step.target);
+        
+        if (!targetElement) {
+            console.warn('Tutorial target not found:', step.target);
+            return;
+        }
+        
+        const rect = targetElement.getBoundingClientRect();
+        
+        // Position highlight - use fixed positioning relative to viewport
+        highlight.style.display = 'block';
+        highlight.style.position = 'fixed';
+        highlight.style.top = `${rect.top - 5}px`;
+        highlight.style.left = `${rect.left - 5}px`;
+        highlight.style.width = `${rect.width + 10}px`;
+        highlight.style.height = `${rect.height + 10}px`;
+        
+        // Position tooltip based on preferred position using fixed positioning
+        let tooltipTop, tooltipLeft;
+        const tooltipWidth = 350;
+        const tooltipHeight = 250;
+        const margin = 20;
+        
+        switch (step.position) {
+            case 'bottom':
+                tooltipTop = rect.bottom + margin;
+                tooltipLeft = rect.left + (rect.width - tooltipWidth) / 2;
+                tooltip.className = 'tutorial-tooltip bottom';
+                break;
+            case 'top':
+                tooltipTop = rect.top - tooltipHeight - margin;
+                tooltipLeft = rect.left + (rect.width - tooltipWidth) / 2;
+                tooltip.className = 'tutorial-tooltip top';
+                break;
+            case 'left':
+                tooltipTop = rect.top + (rect.height - tooltipHeight) / 2;
+                tooltipLeft = rect.left - tooltipWidth - margin;
+                tooltip.className = 'tutorial-tooltip left';
+                break;
+            case 'right':
+                tooltipTop = rect.top + (rect.height - tooltipHeight) / 2;
+                tooltipLeft = rect.right + margin;
+                tooltip.className = 'tutorial-tooltip right';
+                break;
+        }
+        
+        // Adjust if tooltip goes off screen
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        if (tooltipLeft < 10) tooltipLeft = 10;
+        if (tooltipLeft + tooltipWidth > viewportWidth - 10) {
+            tooltipLeft = viewportWidth - tooltipWidth - 10;
+        }
+        if (tooltipTop < 10) tooltipTop = 10;
+        if (tooltipTop + tooltipHeight > viewportHeight - 10) {
+            tooltipTop = viewportHeight - tooltipHeight - 10;
+        }
+        
+        // Apply fixed positioning to stay with element during scroll
+        tooltip.style.position = 'fixed';
+        tooltip.style.top = `${tooltipTop}px`;
+        tooltip.style.left = `${tooltipLeft}px`;
+        tooltip.style.width = `${tooltipWidth}px`;
+        tooltip.style.maxWidth = `${tooltipWidth}px`;
+    }
+
+    updateTutorialDots(currentStep, totalSteps) {
+        const dotsContainer = document.querySelector('.tutorial-dots');
+        dotsContainer.innerHTML = '';
+        
+        for (let i = 0; i < totalSteps; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            if (i === currentStep) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    nextTutorialStep() {
+        const steps = TUTORIAL_STEPS[currentLanguage];
+        if (currentTutorialStep < steps.length - 1) {
+            currentTutorialStep++;
+            this.showTutorialStep(currentTutorialStep);
+        } else {
+            this.endTutorial();
+        }
+    }
+
+    prevTutorialStep() {
+        if (currentTutorialStep > 0) {
+            currentTutorialStep--;
+            this.showTutorialStep(currentTutorialStep);
         }
     }
 }

@@ -24,6 +24,7 @@
                         <div class="select-option" data-value="gu">ગુજરાતી</div>
                     </div>
                 </div>
+                <button id="tutorial-toggle" class="tutorial-btn"> Tutorial</button>
             </div>
         </div>
     </header>
@@ -232,6 +233,26 @@
             </p>
         </div>
     </footer>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay">
+        <div class="tutorial-tooltip">
+            <div class="tutorial-content">
+                <h3 id="tutorial-title"></h3>
+                <p id="tutorial-content"></p>
+                <div class="tutorial-progress">
+                    <span id="tutorial-step"></span>
+                    <div class="tutorial-dots"></div>
+                </div>
+            </div>
+            <div class="tutorial-controls">
+                <button id="tutorial-prev" class="tutorial-nav-btn">← Previous</button>
+                <button id="tutorial-next" class="tutorial-nav-btn">Next →</button>
+                <button id="tutorial-skip" class="tutorial-skip-btn">Skip Tutorial</button>
+            </div>
+        </div>
+        <div class="tutorial-highlight"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>

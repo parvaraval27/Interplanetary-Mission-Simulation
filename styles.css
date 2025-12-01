@@ -140,6 +140,223 @@ header {
     color: #00ff88;
 }
 
+.tutorial-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.8rem 1.2rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    margin-left: 0.5rem;
+}
+
+.tutorial-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.tutorial-btn:active {
+    transform: translateY(0);
+}
+
+/* Tutorial Overlay */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: none;
+    pointer-events: none;
+}
+
+.tutorial-overlay.active {
+    display: block;
+    pointer-events: all;
+}
+
+.tutorial-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-width: 350px;
+    width: 350px;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    z-index: 10001;
+    pointer-events: all;
+}
+
+.tutorial-tooltip.bottom {
+    margin-top: 20px;
+}
+
+.tutorial-tooltip.top {
+    margin-bottom: 20px;
+}
+
+.tutorial-tooltip.left {
+    margin-right: 20px;
+}
+
+.tutorial-tooltip.right {
+    margin-left: 20px;
+}
+
+.tutorial-tooltip::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
+
+.tutorial-tooltip.bottom::before {
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--primary-color);
+}
+
+.tutorial-tooltip.top::before {
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--primary-color);
+}
+
+.tutorial-tooltip.left::before {
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--primary-color);
+}
+
+.tutorial-tooltip.right::before {
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--primary-color);
+}
+
+.tutorial-content h3 {
+    color: var(--primary-color);
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tutorial-content p {
+    color: var(--text-primary);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.tutorial-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.tutorial-progress span {
+    color: var(--accent-color);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+}
+
+.tutorial-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.tutorial-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.tutorial-dots .dot.active {
+    background: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.tutorial-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tutorial-nav-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.tutorial-nav-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.tutorial-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tutorial-skip-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.5rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.tutorial-skip-btn:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tutorial-highlight {
+    position: fixed;
+    border: 3px solid var(--primary-color);
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
 header h1 {
     font-size: 3rem;
     font-weight: 900;
