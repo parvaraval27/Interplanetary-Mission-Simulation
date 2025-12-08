@@ -25,6 +25,7 @@
                     </div>
                 </div>
                 <button id="tutorial-toggle" class="tutorial-btn"> Tutorial</button>
+                <button id="challenge-mode-toggle" class="challenge-btn"></button>
             </div>
         </div>
     </header>
@@ -253,6 +254,33 @@
         </div>
         <div class="tutorial-highlight"></div>
     </div>
+
+    <!-- Challenge Mode Overlay -->
+<div id="challenge-overlay" class="challenge-overlay">
+    <div class="challenge-container">
+        <div class="challenge-header">
+            <h2>Game Challenges Mode</h2>
+            <button id="close-challenges" class="close-btn">×</button>
+        </div>
+        <div class="challenge-grid">
+    <div class="challenge-card" data-challenge="budget">
+        <h3>💰 Budget-Limited Mars Mission</h3>
+        <p>Reach Mars with ≤ ₹500 Crore budget</p>
+        <div class="difficulty">⭐⭐</div>
+    </div>
+    <div class="challenge-card" data-challenge="emergency">
+        <h3>🚨 Time-Critical Emergency Mission</h3>
+        <p>Fast repair mission with strict time limit</p>
+        <div class="difficulty">⭐⭐⭐</div>
+    </div>
+    <div class="challenge-card" data-challenge="green">
+        <h3>🌱 Green Space Mission</h3>
+        <p>Low-propellant mission using green propulsion</p>
+        <div class="difficulty">⭐⭐⭐</div>
+    </div>
+</div>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>

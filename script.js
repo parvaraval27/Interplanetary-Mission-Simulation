@@ -374,6 +374,7 @@ class MissionSimulator {
         this.animationId = null;
         this.trajectoryPoints = [];
         this.planetScreenPositions = {};
+                this.currentChallenge = null; // active challenge id, e.g. 'budget'
         
         this.setupCanvas();
         this.initializeEventListeners();
@@ -399,6 +400,41 @@ class MissionSimulator {
         // Tutorial toggle
         document.getElementById('tutorial-toggle').addEventListener('click', () => this.toggleTutorial());
         
+        // Challenge Mode: open/close overlay
+        const challengeToggle = document.getElementById('challenge-mode-toggle');
+        const challengeOverlay = document.getElementById('challenge-overlay');
+        const closeChallenges = document.getElementById('close-challenges');
+
+        if (challengeToggle && challengeOverlay) {
+            challengeToggle.textContent = 'Challenges';
+            challengeToggle.addEventListener('click', () => {
+                challengeOverlay.classList.add('active');
+            });
+        }
+
+        if (closeChallenges && challengeOverlay) {
+            closeChallenges.addEventListener('click', () => {
+                challengeOverlay.classList.remove('active');
+            });
+        }
+
+        // Close when clicking on dark background
+        if (challengeOverlay) {
+            challengeOverlay.addEventListener('click', (e) => {
+                if (e.target === challengeOverlay) {
+                    challengeOverlay.classList.remove('active');
+                }
+            });
+        }
+
+                // Challenge card click handlers
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.dataset.challenge; // 'budget', 'payload', etc.
+                this.startChallenge(type);
+            });
+        });
+
         // Range input listeners
         document.getElementById('payload-mass').addEventListener('input', (e) => {
             document.getElementById('payload-mass-value').textContent = `${e.target.value} kg`;
@@ -667,6 +703,203 @@ class MissionSimulator {
         input.style.background = `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${percent}%, rgba(255, 255, 255, 0.1) ${percent}%, rgba(255, 255, 255, 0.1) 100%)`;
     }
 
+            startChallenge(type) {
+        this.currentChallenge = type;
+
+        const challengeOverlay = document.getElementById('challenge-overlay');
+        if (challengeOverlay) challengeOverlay.classList.remove('active');
+
+        document.body.classList.add('challenge-mode');
+
+        const statusElement = document.getElementById('mission-status');
+        statusElement.innerHTML = '';
+
+        if (type === 'budget') {
+            // Budget Mars, ≤ ₹500 Cr, payload ≥ 400 kg, chemical/electric only
+            statusElement.innerHTML = `
+                <p><strong>💰 Budget-Limited Mission:</strong> Reach <strong>Mars</strong> with
+                ≤ <strong>₹500 Crore</strong>, payload ≥ <strong>400 kg</strong>, using
+                <strong>Chemical</strong> or <strong>Electric</strong> propulsion. Try to minimize travel time.</p>
+            `;
+
+            // Force Mars + lock
+            const destSelected = document.querySelector('#destination-select .select-selected');
+            if (destSelected) {
+                destSelected.textContent = 'Mars';
+                destSelected.dataset.value = 'mars';
+            }
+            document.querySelectorAll('#destination-select .select-option').forEach(opt => {
+                if (opt.dataset.value !== 'mars') {
+                    opt.style.opacity = '0.3';
+                    opt.style.pointerEvents = 'none';
+                } else {
+                    opt.style.opacity = '1';
+                    opt.style.pointerEvents = 'auto';
+                }
+            });
+
+            // Allowed propulsion: chemical, electric
+            document.querySelectorAll('.propulsion-card').forEach(card => {
+                const pType = card.dataset.type;
+                if (pType === 'chemical' || pType === 'electric') {
+                    card.classList.add('allowed');
+                    card.classList.remove('disallowed');
+                } else {
+                    card.classList.add('disallowed');
+                    card.classList.remove('allowed');
+                }
+            });
+
+        } else if (type === 'emergency') {
+            // Emergency: very short time, high-thrust chemical only
+            statusElement.innerHTML = `
+                <p><strong>🚨 Time-Critical Emergency:</strong> Complete the mission in
+                <strong>≤ 100 days</strong> using <strong>Chemical</strong> propulsion. Any planet pair allowed.</p>
+            `;
+
+            // All destinations allowed again
+            document.querySelectorAll('#destination-select .select-option').forEach(opt => {
+                opt.style.opacity = '1';
+                opt.style.pointerEvents = 'auto';
+            });
+
+            // Only chemical allowed
+            document.querySelectorAll('.propulsion-card').forEach(card => {
+                const pType = card.dataset.type;
+                if (pType === 'chemical') {
+                    card.classList.add('allowed');
+                    card.classList.remove('disallowed');
+                } else {
+                    card.classList.add('disallowed');
+                    card.classList.remove('allowed');
+                }
+            });
+
+        } else if (type === 'green') {
+            // Green: electric or solar-sail, minimize propellant
+            statusElement.innerHTML = `
+                <p><strong>🌱 Green Space Mission:</strong> Use <strong>Electric</strong> or
+                <strong>Solar Sail</strong> propulsion and keep propellant mass very low.
+                Destination and duration are flexible.</p>
+            `;
+
+            // All destinations allowed again
+            document.querySelectorAll('#destination-select .select-option').forEach(opt => {
+                opt.style.opacity = '1';
+                opt.style.pointerEvents = 'auto';
+            });
+
+            // Only electric / solar-sail allowed
+            document.querySelectorAll('.propulsion-card').forEach(card => {
+                const pType = card.dataset.type;
+                if (pType === 'electric' || pType === 'solar-sail') {
+                    card.classList.add('allowed');
+                    card.classList.remove('disallowed');
+                } else {
+                    card.classList.add('disallowed');
+                    card.classList.remove('allowed');
+                }
+            });
+        }
+    }
+
+        evaluateBudgetChallenge() {
+        if (!this.missionData) return;
+
+        const statusElement = document.getElementById('mission-status');
+        const md = this.missionData;
+
+        // Check constraints
+        const payloadOk = md.payloadMass >= 400;
+        const destOk = md.destination === 'mars';
+        const propOk = (md.propulsion === 'chemical' || md.propulsion === 'electric');
+
+        // Approximate cost in Crore from cost-estimate text
+        const costText = document.getElementById('cost-estimate').textContent || '';
+        let costCrore = null;
+        const match = costText.match(/₹([\d.]+)/);
+        if (match) {
+            const billion = parseFloat(match[1]); // "₹X.XX billion"
+            costCrore = billion * 100;           // 1 billion = 100 Crore
+        }
+        const budgetOk = costCrore !== null && costCrore <= 1000;
+
+        const problems = [];
+        if (!destOk) problems.push('Destination must be Mars.');
+        if (!propOk) problems.push('Use Chemical or Electric propulsion.');
+        if (!payloadOk) problems.push('Payload must be at least 400 kg.');
+        if (!budgetOk) problems.push('Mission cost must be ≤ ₹1000 Crore.');
+
+        // Append feedback under current status
+        if (problems.length === 0 && md.success) {
+            statusElement.innerHTML += `
+                <p class="challenge-success">✅ Budget Challenge cleared! You met all constraints within ₹500 Crore.</p>
+            `;
+        } else {
+            statusElement.innerHTML += `
+                <div class="challenge-feedback">
+                    <p><strong>Challenge feedback:</strong></p>
+                    <ul>
+                        ${problems.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    }
+
+        evaluateEmergencyChallenge() {
+        if (!this.missionData) return;
+        const statusElement = document.getElementById('mission-status');
+        const md = this.missionData;
+
+        const timeOk = md.missionDuration <= 1000;
+        const propOk = md.propulsion === 'chemical';
+
+        const problems = [];
+        if (!timeOk) problems.push('Mission must finish in ≤ 1000 days.');
+        if (!propOk) problems.push('Use Chemical propulsion.');
+
+        if (problems.length === 0 && md.success) {
+            statusElement.innerHTML += `
+                <p class="challenge-success">✅ Emergency Challenge cleared! Fast repair achieved.</p>
+            `;
+        } else {
+            statusElement.innerHTML += `
+                <div class="challenge-feedback">
+                    <p><strong>Emergency challenge feedback:</strong></p>
+                    <ul>${problems.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+    }
+
+    evaluateGreenChallenge() {
+        if (!this.missionData) return;
+        const statusElement = document.getElementById('mission-status');
+        const md = this.missionData;
+
+        const propOk = (md.propulsion === 'electric' || md.propulsion === 'solar-sail');
+        const propellantMass = md.massRequirements?.propellantMass || 0;
+        const propellantOk = propellantMass <= 2000; // arbitrary "low" threshold
+
+        const problems = [];
+        if (!propOk) problems.push('Use Electric or Solar Sail propulsion.');
+        if (!propellantOk) problems.push('Propellant mass should be ≤ 2000 kg.');
+
+        if (problems.length === 0 && md.success) {
+            statusElement.innerHTML += `
+                <p class="challenge-success">✅ Green Challenge cleared! Efficient low-propellant mission.</p>
+            `;
+        } else {
+            statusElement.innerHTML += `
+                <div class="challenge-feedback">
+                    <p><strong>Green challenge feedback:</strong></p>
+                    <ul>${problems.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+    }
+
     calculateMission() {
         const origin = document.querySelector('#origin-select .select-selected').dataset.value;
         const destination = document.querySelector('#destination-select .select-selected').dataset.value;
@@ -730,10 +963,18 @@ class MissionSimulator {
         } else {
             this.updateMissionStatus('Mission calculation complete. Current configuration fails constraints (time or mass). Try adjusting payload, duration, propulsion, or trajectory.', 'info');
         }
+
+        // If a challenge is active, evaluate it
+        if (this.currentChallenge === 'budget') {
+            this.evaluateBudgetChallenge();
+        } else if (this.currentChallenge === 'emergency') {
+            this.evaluateEmergencyChallenge();
+        } else if (this.currentChallenge === 'green') {
+            this.evaluateGreenChallenge();
+        }
         
         // Enable animation button
         document.getElementById('animate-trajectory').disabled = false;
-
         // Update trade-off chart
         this.updateTradeoffChart();
     }
@@ -1041,9 +1282,9 @@ class MissionSimulator {
         document.getElementById('efficiency').textContent = `${(propulsionSystem.efficiency * 100).toFixed(1)}%`;
         
         // Calculate cost estimate (simplified)
-        const costPerKg = 10000; // ₹10,000 per kg to LEO
+        const costPerKg = 400000; // ₹4,00,000 per kg
         const costEstimate = massRequirements.totalMass * costPerKg;
-        document.getElementById('cost-estimate').textContent = `₹${(costEstimate / 1e9).toFixed(2)} billion`;
+        document.getElementById('cost-estimate').textContent = `₹${(costEstimate / 1e7).toFixed(2)} crore`;
         
         // Update arrival conditions
         document.getElementById('approach-velocity').textContent = `${arrivalConditions.approachVelocity} km/s`;
